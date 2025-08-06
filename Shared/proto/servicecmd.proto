@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "atenaGrpc";
+
+package AtenServices;
+
+service AtenServices {
+    rpc ExeService (Cmd) returns (CmdResponse);
+}
+
+enum ServiceId {
+  PING = 0;
+  LISTEN_TO_DESKTOP_AUDIO = 1;
+  SEE_SCREEN = 2;
+  DEFAULT_OK_RETURN = 3;
+  DEFAULT_BAD_RETURN = 4;
+  START_SERVICE = 5;
+}
+
+message Cmd {
+    ServiceId serviceId = 1;
+    string serviceName = 2;
+    bytes data = 3;
+}
+
+message CmdResponse {
+    string serviceName = 1;
+    bytes data = 2;
+    Status status = 3;
+}
+
+enum Status {
+    SUCCESS = 0;
+    FAIL = 1;
+}

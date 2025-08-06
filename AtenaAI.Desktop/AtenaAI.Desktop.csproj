@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!--If you are willing to use Windows/MacOS native APIs you will need to create 3 projects.
+    One for Windows with net8.0-windows TFM, one for MacOS with net8.0-macos and one with net8.0 TFM for Linux.-->
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject>AtenaAI.Desktop.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+<Target Name="CopyPythonServices" AfterTargets="Build">
+    <ItemGroup>
+      <PythonService Include="..\Shared\services\**\*.py" />
+    </ItemGroup>
+  
+    <Copy SourceFiles="@(PythonService)"
+          DestinationFiles="@(PythonService->'$(OutputPath)\services\%(RecursiveDir)%(Filename)%(Extension)')" />
+  
+    <ItemGroup>
+      <PythonMainService Include="..\Shared\*.py" />
+    </ItemGroup>
+  
+    <Copy SourceFiles="@(PythonMainService)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
+    <Target Name="CopyConfigJson" AfterTargets="CopyPythonServices">
+        <ItemGroup>
+        <ConfigJson Include="..\Shared\config.json" />
+        </ItemGroup>
+      <Copy SourceFiles="@(ConfigJson)" DestinationFolder="$(OutputPath)" />
+    </Target>
+
+<Target Name="CopyAssets" AfterTargets="CopyConfigJson">
+  <ItemGroup>
+    <Assets Include="..\AtenaAI\Assets\**\*" />
+  </ItemGroup>
+
+  <Copy SourceFiles="@(Assets)" DestinationFiles="@(Assets->'$(OutputPath)\Assets\%(RecursiveDir)%(Filename)%(Extension)')"/>
+</Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AtenaAI\AtenaAI.csproj" />
+  </ItemGroup>
+</Project>

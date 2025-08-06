@@ -1,0 +1,10 @@
+{
+	"ListenDesktopAudio" : true,
+	"SeeScreen" : true,
+	"pythonPath": "C:\\Users\\Daniel\\miniconda3\\envs\\atena\\python.exe",
+	"serviceFilePath" :  "services\\",
+	"mainService": "main_service.py",
+	"serverAddr": "localhost",
+	"port": "50051",
+	"tls": false // do not turn it on, cuz it does not work
+}
