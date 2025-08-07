@@ -2,28 +2,39 @@ import grpc
 import servicecmd_pb2 as servicecmd
 import servicecmd_pb2_grpc as servercmd_grpc
 from loguru import logger
-from services.pyservices.service import Service
+from services.pyservices.service import Service, FAIL, DEFAULT_BAD_RETURN
 from services.pyservices.ping import Ping
+from services.cmd_packet import CmdPacket, ResPacket
 
-
-def create_res(name : str, data : bytearray, status: int):
+def create_res(serviceRes: ResPacket):
     return servicecmd.CmdResponse(
-        serviceName=name,
-        data=bytes(data),
-        status=status
+        serviceId=serviceRes.serviceId if serviceRes.serviceId is not None else DEFAULT_BAD_RETURN,
+        serviceName=serviceRes.serviceName or "ERROR",
+        data=bytes(serviceRes.serviceData) if serviceRes.serviceData else b"ERROR",
+        status=serviceRes.serviceStatus if serviceRes.serviceStatus is not None else FAIL
     )
 
 def exec_service(service : Service, data : bytearray):
-    ret = service.on_execute(data)
+    ret : ResPacket = service.on_execute(data)
+    ret = create_res(ret)
 
-    return create_res(ret[0], ret[1], ret[2])
+    return ret
 
+# return packet
 def handle_service(request, context):
-    logger.info(f"Got service with id : {request.serviceId}")
 
-    match(request.serviceId):
+    cmdPacket = CmdPacket(request)
+
+    logger.info(f"Got service with id : {cmdPacket.serviceId}")
+
+    match(cmdPacket.serviceId):
         case 0:
-            return exec_service(Ping(), bytearray(request.data))
-
+            return exec_service(Ping(), cmdPacket.serviceData)
         case _:
             logger.error("No handler for this")
+            return create_res(ResPacket(
+                DEFAULT_BAD_RETURN,
+                "DEFAULT_BAD_RETURN",
+                bytearray(bytes("Not a valid service id", "utf-8")),
+                FAIL
+            ))

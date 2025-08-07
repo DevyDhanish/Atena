@@ -6,5 +6,33 @@
 	"mainService": "main_service.py",
 	"serverAddr": "localhost",
 	"port": "50051",
-	"tls": false // do not turn it on, cuz it does not work
+	"tls": false,
+	"tcpPort" : "50052",
+
+	"ServicesFilePathWithName" : [
+		{
+			"serviceName" : "Ping",
+			"serviceFilePath" : "services\\pyservices\\ping.py"
+		},
+		{
+			"serviceName" : "StartService",
+			"serviceFilePath" : "services\\service_handler.py"
+		},
+		{
+			"serviceName" : "SeeScreen",
+			"serviceFilePath" : ""
+		},
+		{
+			"serviceName" : "DefaultOkReturn",
+			"serviceFilePath" : "services\\pyservices\\service.py"
+		},
+		{
+			"serviceName" : "ListenToDesktopAudio",
+			"serviceFilePath" : ""
+		},
+		{
+			"serviceName" : "DefaultBadReturn",
+			"serviceFilePath" : "services\\pyservices\\service.py"
+		}
+	]
 }

@@ -12,7 +12,7 @@ namespace atena.ServiceType
         public Ping()
         {
             SetServiceId(ServiceId.Ping);
-            SetServiceName("PONG!!");
+            SetServiceName(Services.GetServiceNameById(_serviceId));
             SetData(null);
         }
         public void SetData(byte[]? data)

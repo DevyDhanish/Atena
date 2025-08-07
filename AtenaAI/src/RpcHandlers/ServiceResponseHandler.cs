@@ -16,14 +16,26 @@ namespace atena.RpcHandlers
                 return;
             }
 
-            AtenaEvent.instance.OnRecvGrpcResonse += OnGrpcData;
+            AtenaEvent.instance.OnRecvGrpcResonse += OnGrpcRecvData;
+            AtenaEvent.instance.OnServiceStarted += OnServiceStarted;
+            AtenaEvent.instance.OnServiceStopped += OnServiceStopped;
         }
 
-        private void OnGrpcData(byte[]? data)
+        private void OnGrpcRecvData(byte[]? data)
         {
             if (data == null) return;
 
             Log.Info(Encoding.UTF8.GetString(data));
+        }
+
+        private void OnServiceStarted(atenaGrpc.ServiceId id)
+        {
+            
+        }
+
+        private void OnServiceStopped(atenaGrpc.ServiceId id)
+        {
+
         }
     }
 }

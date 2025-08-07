@@ -14,12 +14,19 @@ namespace atena.ServiceType
         public ListenDeskAudio()
         {
             SetServiceId(atenaGrpc.ServiceId.ListenToDesktopAudio);
-            SetServiceName("Listen to desktop Audio");
+            SetServiceName(Services.GetServiceNameById(_serviceId));
             SetData(null);
         }
 
         public void SetData(byte[]? data)
         {
+            if (data == null)
+            {
+                Log.Warn("No data provided, using default");
+                _data = Encoding.UTF8.GetBytes(Services.GetRandomData());
+                return;
+            }
+
             _data = data;
         }
 

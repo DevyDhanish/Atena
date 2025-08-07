@@ -19,19 +19,19 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        if (!Design.IsDesignMode)
+        {
+            // creat the atena app
+            Atena atena = new();
+            atena.InitAtena();
+        }
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainViewModel()
             };
-        }
-
-        if(!Design.IsDesignMode)
-        {
-            // creat the atena app
-            Atena atena = new();
-            atena.InitAtena();
         }
 
         base.OnFrameworkInitializationCompleted();

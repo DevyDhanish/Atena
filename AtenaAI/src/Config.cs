@@ -4,6 +4,7 @@ using System;
 namespace atena
 {
     using Newtonsoft.Json;
+    using System.Collections.Generic;
     using System.IO;
 
     public class Config
@@ -61,6 +62,23 @@ namespace atena
             }
         }
 
+        public string GetServiceFilePathFromName(string name)
+        {
+            if (Data.ServicesFilePathWithName == null) return "";
+
+            foreach(Services.ServiceFilePath? sfp in Data.ServicesFilePathWithName)
+            {
+                if(sfp.serviceName == name)
+                {
+                    if (sfp.serviceFilePath == null) return "";
+
+                    return sfp.serviceFilePath;
+                }
+            }
+
+            return "";
+        }
+
         public class ConfigData
         {
             public bool ListenDesktopAudio { get; set; } = false;
@@ -70,8 +88,8 @@ namespace atena
             public bool tls { get; set; } = false;
             public string serverAddr { get; set; } = "null";
             public string port { get; set; } = "null";
-
-            public string serviceFilePath { get; set; } = "null";
+            public string tcpPort { get; set; } = "null";
+            public List<Services.ServiceFilePath>? ServicesFilePathWithName { get; set; }
         }
     }
 

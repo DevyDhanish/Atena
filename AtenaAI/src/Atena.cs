@@ -1,6 +1,7 @@
 ﻿using atena;
 using atena.ServiceType;
 using atena.RpcHandlers;
+using AtenaAI.EventHandlers;
 
 namespace atena
 {
@@ -10,16 +11,13 @@ namespace atena
         {
             Log.InitLogger();
 
-            // since we don't really use these vars both
-            AtenaEvent _ = new();
-            ServiceResponseHandler __ = new();
+            AtenaEvent atenaEvent = new();
+            ServiceResponseHandler serviceResponseHandler = new();
 
             // load the config it will create the singleton instance
             Config.LoadFromFile("config.json");
 
             Services services = new();
-
-            services.DispatchService(new Ping());
         }
     }
 }
