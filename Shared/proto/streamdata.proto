@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "atenaGrpc.Nest";
+
+package AtenNest;
+
+
+// so some services can send stream data to Atena
+// we need a structure for that
+// mostly the data might be the generated text that we got.
+// or the text we picked up from desktop audio.
+
+enum DisplayType
+{
+    CHAT_UI = 0;
+    MAIN_UI = 1;
+}
+
+// add more as you like 
+enum DataType
+{
+    AI_GEN_TEXT = 0;
+    NORMAL_TEXT = 1;
+}
+
+message StreamData
+{
+    DataType dataType = 1;
+    DisplayType displayType = 2;
+    bytes data = 3;
+}
