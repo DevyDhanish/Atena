@@ -44,7 +44,7 @@
 				</TextBlock>
 				<Border 
 					Name="Body_Layout_Container"
-					Background="Transparent"
+					Background="LightBlue"
 					Width="300"
 					Height="300">
 					<ScrollViewer
