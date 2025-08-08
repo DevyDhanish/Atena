@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Google.Protobuf" Version="3.31.1" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.31.1" />
   </ItemGroup>
 
 <Target Name="CopyPythonServices" AfterTargets="Build">
@@ -19,8 +21,7 @@
       <PythonService Include="..\Shared\services\**\*.py" />
     </ItemGroup>
   
-    <Copy SourceFiles="@(PythonService)"
-          DestinationFiles="@(PythonService->'$(OutputPath)\services\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(PythonService)" DestinationFiles="@(PythonService->'$(OutputPath)\services\%(RecursiveDir)%(Filename)%(Extension)')" />
   
     <ItemGroup>
       <PythonMainService Include="..\Shared\*.py" />
@@ -41,7 +42,7 @@
     <Assets Include="..\AtenaAI\Assets\**\*" />
   </ItemGroup>
 
-  <Copy SourceFiles="@(Assets)" DestinationFiles="@(Assets->'$(OutputPath)\Assets\%(RecursiveDir)%(Filename)%(Extension)')"/>
+  <Copy SourceFiles="@(Assets)" DestinationFiles="@(Assets->'$(OutputPath)\Assets\%(RecursiveDir)%(Filename)%(Extension)')" />
 </Target>
 
   <ItemGroup>

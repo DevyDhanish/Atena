@@ -34,7 +34,7 @@
 				Name="Body_Layout">
 				<Button
 					Click="OnPingClick">
-					Ping Service</Button>
+					Capture Audio</Button>
 				<TextBlock 
 					Name="Body_Layout_Heading"
 					Text="Running Services"

@@ -19,13 +19,25 @@ class Config:
                 logger.error(f"Unable to decode json file {path_to_config_file}")
                 return
             
-    def get_nest_addr(self):
+    def get_grpc_port(self) -> str:
+        if self.config_data is not None:
+            return self.config_data["port"]
+        else: return ""
+        
+    def get_grpc_server(self) -> str:
         if self.config_data is not None:
             return self.config_data["serverAddr"]
+        else: return ""
+        
+    def get_nest_addr(self) -> str:
+        if self.config_data is not None:
+            return self.config_data["serverAddr"]
+        else: return ""
 
-    def get_nest_port(self):
+    def get_nest_port(self) -> str:
         if self.config_data is not None:
             return self.config_data["tcpPort"]
+        else: return ""
         
 
 

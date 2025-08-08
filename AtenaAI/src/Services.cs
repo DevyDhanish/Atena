@@ -93,8 +93,6 @@ namespace atena
 
             serverUrl += "http://" + confData.serverAddr + ":" + confData.port;
 
-            Log.Info("Connecting to {0}", serverUrl);
-
             _channel = GrpcChannel.ForAddress(serverUrl);
 
             _client = new AtenServices.AtenServicesClient(_channel);

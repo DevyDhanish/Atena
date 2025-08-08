@@ -28,7 +28,7 @@
 		},
 		{
 			"serviceName" : "ListenToDesktopAudio",
-			"serviceFilePath" : ""
+			"serviceFilePath" : "services\\pyservices\\listen_desktop.py"
 		},
 		{
 			"serviceName" : "DefaultBadReturn",

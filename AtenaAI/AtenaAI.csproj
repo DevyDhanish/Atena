@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Protobuf Include="..\Shared\proto\servicecmd.proto" GrpcServices="Client" />
+    <Protobuf Include="..\Shared\proto\streamdata.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Google.Protobuf" Version="3.31.1" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.31.1" />
     <PackageReference Include="Grpc" Version="2.46.6" />
     <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
     <PackageReference Include="Grpc.Tools" Version="2.72.0">

@@ -1,12 +1,16 @@
-﻿using AtenaAI.EventHandlers;
+﻿using atena.RpcHandlers;
+using AtenaAI.EventHandlers;
 using Avalonia.Threading;
 using System;
+using System.Net.Sockets;
 
 namespace atena
 {
     public class AtenaEvent
     {
         private UIEventRouter uIEventRouter;
+        private NestHandlers _nestEventHandler;
+        private ServiceResponseHandler _serviceResponseHandler;
         public static AtenaEvent? instance { get; private set; }
 
         public AtenaEvent()
@@ -15,6 +19,8 @@ namespace atena
             else Log.Err("AtenaEvent instance already exists");
 
             uIEventRouter = new UIEventRouter();
+            _nestEventHandler = new NestHandlers();
+            _serviceResponseHandler = new ServiceResponseHandler();
         }
 
         // some event don't need to return anything and some don't even take parameters
@@ -25,6 +31,12 @@ namespace atena
         public Action<byte[]?>? OnRecvGrpcResonse;
         public Action<atenaGrpc.ServiceId>? OnServiceStarted;
         public Action<atenaGrpc.ServiceId>? OnServiceStopped;
+        public Action<Socket>? OnPigeonConnected;
+
+        public void FireOnPigeonConnected(Socket pigeonSocket)
+        {
+            OnPigeonConnected?.Invoke(pigeonSocket);
+        }
 
         public void FireOnRecvGrpcResponseEvent(byte[]? res)
         {

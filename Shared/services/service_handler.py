@@ -2,9 +2,11 @@ import grpc
 import servicecmd_pb2 as servicecmd
 import servicecmd_pb2_grpc as servercmd_grpc
 from loguru import logger
-from services.pyservices.service import Service, FAIL, DEFAULT_BAD_RETURN
+from services.pyservices.service import Service, FAIL, DEFAULT_BAD_RETURN, PING, LISTEN_TO_DESKTOP_AUDIO
 from services.pyservices.ping import Ping
+from services.pyservices.listen_desktop import ListenDesktop
 from services.cmd_packet import CmdPacket, ResPacket
+import threading
 
 def create_res(serviceRes: ResPacket):
     return servicecmd.CmdResponse(
@@ -30,6 +32,10 @@ def handle_service(request, context):
     match(cmdPacket.serviceId):
         case 0:
             return exec_service(Ping(), cmdPacket.serviceData)
+        
+        case 1:
+            return exec_service(ListenDesktop(), cmdPacket.serviceData)
+        
         case _:
             logger.error("No handler for this")
             return create_res(ResPacket(

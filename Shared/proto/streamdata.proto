@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "atenaGrpc.Nest";
+option csharp_namespace = "atenaNest";
 
 package AtenNest;
 
