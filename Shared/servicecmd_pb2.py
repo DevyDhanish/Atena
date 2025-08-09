@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10servicecmd.proto\x12\x0c\x41tenServices\"T\n\x03\x43md\x12*\n\tserviceId\x18\x01 \x01(\x0e\x32\x17.AtenServices.ServiceId\x12\x13\n\x0bserviceName\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"V\n\x0b\x43mdResponse\x12\x13\n\x0bserviceName\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12$\n\x06status\x18\x03 \x01(\x0e\x32\x14.AtenServices.Status*\x84\x01\n\tServiceId\x12\x08\n\x04PING\x10\x00\x12\x1b\n\x17LISTEN_TO_DESKTOP_AUDIO\x10\x01\x12\x0e\n\nSEE_SCREEN\x10\x02\x12\x15\n\x11\x44\x45\x46\x41ULT_OK_RETURN\x10\x03\x12\x16\n\x12\x44\x45\x46\x41ULT_BAD_RETURN\x10\x04\x12\x11\n\rSTART_SERVICE\x10\x05*\x1f\n\x06Status\x12\x0b\n\x07SUCCESS\x10\x00\x12\x08\n\x04\x46\x41IL\x10\x01\x32J\n\x0c\x41tenServices\x12:\n\nExeService\x12\x11.AtenServices.Cmd\x1a\x19.AtenServices.CmdResponseB\x0c\xaa\x02\tatenaGrpcb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10servicecmd.proto\x12\x0c\x41tenServices\"T\n\x03\x43md\x12*\n\tserviceId\x18\x01 \x01(\x0e\x32\x17.AtenServices.ServiceId\x12\x13\n\x0bserviceName\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"\x82\x01\n\x0b\x43mdResponse\x12*\n\tserviceId\x18\x01 \x01(\x0e\x32\x17.AtenServices.ServiceId\x12\x13\n\x0bserviceName\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\x12$\n\x06status\x18\x04 \x01(\x0e\x32\x14.AtenServices.Status*\xa6\x01\n\tServiceId\x12\x08\n\x04PING\x10\x00\x12\x1b\n\x17LISTEN_TO_DESKTOP_AUDIO\x10\x01\x12\x0e\n\nSEE_SCREEN\x10\x02\x12\x15\n\x11\x44\x45\x46\x41ULT_OK_RETURN\x10\x03\x12\x16\n\x12\x44\x45\x46\x41ULT_BAD_RETURN\x10\x04\x12\x11\n\rSTART_SERVICE\x10\x05\x12 \n\x1cSTOP_LISTEN_TO_DESKTOP_AUDIO\x10\x06*\x1f\n\x06Status\x12\x0b\n\x07SUCCESS\x10\x00\x12\x08\n\x04\x46\x41IL\x10\x01\x32J\n\x0c\x41tenServices\x12:\n\nExeService\x12\x11.AtenServices.Cmd\x1a\x19.AtenServices.CmdResponseB\x0c\xaa\x02\tatenaGrpcb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,14 +32,14 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'servicecmd_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\252\002\tatenaGrpc'
-  _globals['_SERVICEID']._serialized_start=209
-  _globals['_SERVICEID']._serialized_end=341
-  _globals['_STATUS']._serialized_start=343
-  _globals['_STATUS']._serialized_end=374
+  _globals['_SERVICEID']._serialized_start=254
+  _globals['_SERVICEID']._serialized_end=420
+  _globals['_STATUS']._serialized_start=422
+  _globals['_STATUS']._serialized_end=453
   _globals['_CMD']._serialized_start=34
   _globals['_CMD']._serialized_end=118
-  _globals['_CMDRESPONSE']._serialized_start=120
-  _globals['_CMDRESPONSE']._serialized_end=206
-  _globals['_ATENSERVICES']._serialized_start=376
-  _globals['_ATENSERVICES']._serialized_end=450
+  _globals['_CMDRESPONSE']._serialized_start=121
+  _globals['_CMDRESPONSE']._serialized_end=251
+  _globals['_ATENSERVICES']._serialized_start=455
+  _globals['_ATENSERVICES']._serialized_end=529
 # @@protoc_insertion_point(module_scope)

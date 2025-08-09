@@ -1,20 +1,21 @@
-﻿using atena;
-using atenaGrpc;
+﻿using atenaGrpc;
 using System.Text;
+using atena;
 
 namespace atena.ServiceType
 {
-    public class Ping : Service
+    public class StopListenDesktop : Service
     {
         private string _serviceName;
         private byte[]? _data;
         private atenaGrpc.ServiceId _serviceId;
-        public Ping()
+        public StopListenDesktop()
         {
-            SetServiceId(ServiceId.Ping);
+            SetServiceId(atenaGrpc.ServiceId.StopListenToDesktopAudio);
             SetServiceName(Services.GetServiceNameById(_serviceId));
             SetData(null);
         }
+
         public void SetData(byte[]? data)
         {
             if (data == null)
@@ -29,8 +30,6 @@ namespace atena.ServiceType
 
         public byte[]? GetData()
         {
-            if (_data == null) { return null; }
-
             return _data;
         }
 

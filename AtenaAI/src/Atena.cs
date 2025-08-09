@@ -1,6 +1,7 @@
 ﻿using atena;
 using atena.ServiceType;
 using atena.RpcHandlers;
+using AtenaAI.EventHandlers;
 
 namespace atena
 {
@@ -10,16 +11,22 @@ namespace atena
         {
             Log.InitLogger();
 
-            // since we don't really use these vars both
-            AtenaEvent _ = new();
-            ServiceResponseHandler __ = new();
+            // will init all types of handlers
+            AtenaEvent atenaEvent = new();
+            //ServiceResponseHandler serviceResponseHandler = new();
 
             // load the config it will create the singleton instance
             Config.LoadFromFile("config.json");
 
-            Services services = new();
 
-            services.DispatchService(new Ping());
+
+            Nest nest = new Nest();
+            nest.Accept(false);
+
+
+            // service should be the last thing getting init cuz this runs the main_service.py 
+            // so putting it last to init make sure that everything else is up and running before we start main_service
+            Services services = new();
         }
     }
 }

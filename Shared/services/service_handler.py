@@ -2,28 +2,69 @@ import grpc
 import servicecmd_pb2 as servicecmd
 import servicecmd_pb2_grpc as servercmd_grpc
 from loguru import logger
-from services.pyservices.service import Service
+from services.pyservices.service import Service, get_service_name_by_id, FAIL, OK, DEFAULT_BAD_RETURN, PING, LISTEN_TO_DESKTOP_AUDIO, STOP_LISTEN_TO_DESKTOP_AUDIO
 from services.pyservices.ping import Ping
+from services.pyservices.listen_desktop import ListenDesktop, LISTEN_DESKTOP_INSTANCE
+from services.cmd_packet import CmdPacket, ResPacket
+from services.common.ai_gen import TextGen
 
-
-def create_res(name : str, data : bytearray, status: int):
+def create_res(serviceRes: ResPacket):
     return servicecmd.CmdResponse(
-        serviceName=name,
-        data=bytes(data),
-        status=status
+        serviceId=serviceRes.serviceId if serviceRes.serviceId is not None else DEFAULT_BAD_RETURN,
+        serviceName=serviceRes.serviceName or "ERROR",
+        data=bytes(serviceRes.serviceData) if serviceRes.serviceData else b"ERROR",
+        status=serviceRes.serviceStatus if serviceRes.serviceStatus is not None else FAIL
     )
 
 def exec_service(service : Service, data : bytearray):
-    ret = service.on_execute(data)
+    ret : ResPacket = service.on_execute(data)
+    ret = create_res(ret)
 
-    return create_res(ret[0], ret[1], ret[2])
+    return ret
 
+# return packet
 def handle_service(request, context):
-    logger.info(f"Got service with id : {request.serviceId}")
+    cmd_packet = CmdPacket(request)
+    logger.info(f"Got service with ID: {cmd_packet.serviceId}")
 
-    match(request.serviceId):
+    global LISTEN_DESKTOP_INSTANCE
+
+    match cmd_packet.serviceId:
         case 0:
-            return exec_service(Ping(), bytearray(request.data))
+            return exec_service(Ping(), cmd_packet.serviceData)
+
+        case 1:
+            # Create or reuse the ListenDesktop singleton instance
+            _ = TextGen()
+            if LISTEN_DESKTOP_INSTANCE is None:
+                LISTEN_DESKTOP_INSTANCE = ListenDesktop()
+            return exec_service(LISTEN_DESKTOP_INSTANCE, cmd_packet.serviceData)
+
+        case 6:
+            if LISTEN_DESKTOP_INSTANCE is not None:
+                LISTEN_DESKTOP_INSTANCE.stop_recording()
+                logger.info("Stopped desktop listening service")
+            else:
+                logger.warning("Stop requested, but ListenDesktop instance does not exist")
+                return create_res(ResPacket(
+                    STOP_LISTEN_TO_DESKTOP_AUDIO,
+                    get_service_name_by_id(STOP_LISTEN_TO_DESKTOP_AUDIO),
+                    bytearray("Not Recording, no need to stop", "utf-8"),
+                    OK
+                ))
+            
+            return create_res(ResPacket(
+                STOP_LISTEN_TO_DESKTOP_AUDIO,
+                get_service_name_by_id(STOP_LISTEN_TO_DESKTOP_AUDIO),
+                bytearray("Stopped listening to desktop audio", "utf-8"),
+                OK
+            ))
 
         case _:
-            logger.error("No handler for this")
+            logger.error("No handler for this service ID")
+            return create_res(ResPacket(
+                DEFAULT_BAD_RETURN,
+                "DEFAULT_BAD_RETURN",
+                bytearray("Not a valid service ID", "utf-8"),
+                FAIL
+            ))

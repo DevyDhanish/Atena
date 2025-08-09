@@ -7,6 +7,7 @@ using atena.RpcHandlers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace atena
 {
@@ -14,8 +15,23 @@ namespace atena
     {
         private static AtenServices.AtenServicesClient? _client;
         private static GrpcChannel? _channel;
+
+        public static Services? Instance { get; private set; }
+
+        public class ServiceFilePath
+        {
+            public string? serviceName;
+            public string? serviceFilePath;
+        }
         public Services()
         {
+            if (Instance == null) Instance = this;
+            else
+            {
+                Log.Err("Services.Instance already exists");
+                return;
+            }
+
             _client = null;
             if (!StartMainService())
             {
@@ -23,6 +39,40 @@ namespace atena
             }
 
             ConnectToMainService();
+        }
+
+        // change this file if you change proto/servicecmd.proto
+        // make sure all the serviceid correspond to their name
+        // this function is not needed by the program but. i use them here and there
+        // not needed for actuall functionality.
+        public static string GetServiceNameById(atenaGrpc.ServiceId serviceId)
+        {
+            switch(serviceId)
+            {
+                case atenaGrpc.ServiceId.Ping:
+                    return "Ping";
+
+                case atenaGrpc.ServiceId.StartService:
+                    return "StartService";
+
+                case atenaGrpc.ServiceId.SeeScreen:
+                    return "SeeScreen";
+
+                case atenaGrpc.ServiceId.DefaultOkReturn:
+                    return "DefaultOkReturn";
+
+                case atenaGrpc.ServiceId.ListenToDesktopAudio:
+                    return "ListenToDesktopAudio";
+
+                case atenaGrpc.ServiceId.DefaultBadReturn:
+                    return "DefaultBadReturn";
+
+                case atenaGrpc.ServiceId.StopListenToDesktopAudio:
+                    return "StopListenToDesktopAudio";
+
+                default:
+                    return "Not a service";
+            }
         }
 
         public static string GetRandomData()
@@ -45,8 +95,6 @@ namespace atena
             }
 
             serverUrl += "http://" + confData.serverAddr + ":" + confData.port;
-
-            Log.Info("Connecting to {0}", serverUrl);
 
             _channel = GrpcChannel.ForAddress(serverUrl);
 
@@ -194,9 +242,22 @@ namespace atena
         /// <param name="service"></param>
         public void StartService(Service service)
         {
-            AtenaEvent.instance?.FireOnRecvGrpcResponseEvent(
-                handleRes(SendService(service))
-            );
+            // notify that we are going to start a service, bismillah.
+            AtenaEvent.instance?.FireOnServiceStarted(service.GetServiceId());
+
+            atenaGrpc.CmdResponse? response = SendService(service);
+
+            byte[]? data = handleRes(response);
+
+            if(data == null)
+            {
+                Log.Err("Service {0} return with status FAIL", service.GetServiceId());
+                return;
+            }
+
+            // notify that the service has returned
+            AtenaEvent.instance?.FireOnServiceStopped(service.GetServiceId());
+            AtenaEvent.instance?.FireOnRecvGrpcResponseEvent(data);
         }
     }
 }

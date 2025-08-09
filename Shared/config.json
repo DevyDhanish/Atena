@@ -1,10 +1,50 @@
 {
-	"ListenDesktopAudio" : true,
-	"SeeScreen" : true,
+	"screenWidth" : 1920,
+	"screenHeight" : 1080,
+	"mainWindowWidth" : 300,
+	"mainWindowHeight" : 300,
+	"mainWindowPosX" : 0,
+	"mainWindowPosY" : 0,
+	"chatWindowWidth" : 800, 
+	"chatWindowHeight" : 800,
+	"chatWindowPosX" : 500,
+	"chatWindowPosY" : 0,
+	"userTextColor" : "#505050",
+	"atenaTextColor" : "#ffffff",
+	"listenDesktopAudio" : true,
+	"seeScreen" : true,
 	"pythonPath": "C:\\Users\\Daniel\\miniconda3\\envs\\atena\\python.exe",
 	"serviceFilePath" :  "services\\",
 	"mainService": "main_service.py",
 	"serverAddr": "localhost",
 	"port": "50051",
-	"tls": false // do not turn it on, cuz it does not work
+	"tls": false,
+	"tcpPort" : "50052",
+
+	"servicesFilePathWithName" : [
+		{
+			"serviceName" : "Ping",
+			"serviceFilePath" : "services\\pyservices\\ping.py"
+		},
+		{
+			"serviceName" : "StartService",
+			"serviceFilePath" : "services\\service_handler.py"
+		},
+		{
+			"serviceName" : "SeeScreen",
+			"serviceFilePath" : ""
+		},
+		{
+			"serviceName" : "DefaultOkReturn",
+			"serviceFilePath" : "services\\pyservices\\service.py"
+		},
+		{
+			"serviceName" : "ListenToDesktopAudio",
+			"serviceFilePath" : "services\\pyservices\\listen_desktop.py"
+		},
+		{
+			"serviceName" : "DefaultBadReturn",
+			"serviceFilePath" : "services\\pyservices\\service.py"
+		}
+	]
 }

@@ -4,6 +4,7 @@ using System;
 namespace atena
 {
     using Newtonsoft.Json;
+    using System.Collections.Generic;
     using System.IO;
 
     public class Config
@@ -61,17 +62,47 @@ namespace atena
             }
         }
 
+        public string GetServiceFilePathFromName(string name)
+        {
+            if (Data.servicesFilePathWithName == null) return "";
+
+            foreach(Services.ServiceFilePath? sfp in Data.servicesFilePathWithName)
+            {
+                if(sfp.serviceName == name)
+                {
+                    if (sfp.serviceFilePath == null) return "";
+
+                    return sfp.serviceFilePath;
+                }
+            }
+
+            return "";
+        }
+
         public class ConfigData
         {
-            public bool ListenDesktopAudio { get; set; } = false;
-            public bool SeeScreen { get; set; } = false;
+
+            public int screenWidth { get; set; }
+            public int screenHeight { get; set; }
+            public int mainWindowWidth { get; set; }
+            public int mainWindowHeight { get; set; }
+            public int mainWindowPosX { get; set; }
+            public int mainWindowPosY { get; set; }
+            public int chatWindowWidth { get; set; }
+            public int chatWindowHeight { get; set; }
+            public int chatWindowPosX { get; set; }
+            public int chatWindowPosY { get; set; }
+            public string userTextColor { get; set; } = "#505050";
+            public string atenaTextColor { get; set; } = "#ffffff";
+            public bool listenDesktopAudio { get; set; } = false;
+            public bool seeScreen { get; set; } = false;
             public string pythonPath { get; set; } = "null";
             public string mainService { get; set; } = "null";
             public bool tls { get; set; } = false;
             public string serverAddr { get; set; } = "null";
             public string port { get; set; } = "null";
-
-            public string serviceFilePath { get; set; } = "null";
+            public string tcpPort { get; set; } = "null";
+            public List<Services.ServiceFilePath>? servicesFilePathWithName { get; set; }
         }
     }
 

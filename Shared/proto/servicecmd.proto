@@ -8,6 +8,7 @@ service AtenServices {
     rpc ExeService (Cmd) returns (CmdResponse);
 }
 
+// if you add a new service, change service.py and Services.cs
 enum ServiceId {
   PING = 0;
   LISTEN_TO_DESKTOP_AUDIO = 1;
@@ -15,6 +16,7 @@ enum ServiceId {
   DEFAULT_OK_RETURN = 3;
   DEFAULT_BAD_RETURN = 4;
   START_SERVICE = 5;
+  STOP_LISTEN_TO_DESKTOP_AUDIO = 6;
 }
 
 message Cmd {
@@ -24,9 +26,10 @@ message Cmd {
 }
 
 message CmdResponse {
-    string serviceName = 1;
-    bytes data = 2;
-    Status status = 3;
+    ServiceId serviceId = 1;
+    string serviceName = 2;
+    bytes data = 3;
+    Status status = 4;
 }
 
 enum Status {
