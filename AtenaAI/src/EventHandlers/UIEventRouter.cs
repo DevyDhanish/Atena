@@ -23,6 +23,14 @@ namespace AtenaAI.EventHandlers
         public Action<string>? UI_OnServiceStarted { get; set; }
         public Action<string>? UI_OnServiceStopped { get; set; }
 
+        // change this int to some UI.Chatype. one for AI text and one for User Text
+        public Action<string, atenaNest.DataType>? UI_OnChatTextRecieved { get; set; }
+
+        public void FireOnChatTextRecieved(string chat, atenaNest.DataType type)
+        {
+            UI_OnChatTextRecieved?.Invoke(chat, type);
+        }
+
         public void FireOnServiceStarted(string serviceName)
         {
             UI_OnServiceStarted?.Invoke(serviceName);

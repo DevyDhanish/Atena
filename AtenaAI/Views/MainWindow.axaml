@@ -6,13 +6,10 @@
         xmlns:views="clr-namespace:AtenaAI.Views"
         mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
         x:Class="AtenaAI.Views.MainWindow"
-        Title="AtenaAI"
+        Title="Atena"
 		SystemDecorations="None"
 		Background="Transparent"
-	    Topmost="True"
-		Width="300"
-		Height="300"
-		Position="0,0">
+	    Topmost="True">
 
 	<StackPanel
 		Name="MainLayout"
@@ -32,9 +29,17 @@
 			Name="Body">
 			<StackPanel
 				Name="Body_Layout">
-				<Button
-					Click="OnPingClick">
-					Capture Audio</Button>
+				<StackPanel
+					Orientation="Horizontal">
+					<Button
+						Click="OnStartAudioClick">
+						Capture Audio
+					</Button>
+					<Button
+						Click="OnStopAudioClick">
+						Stop Audio
+					</Button>
+				</StackPanel>
 				<TextBlock 
 					Name="Body_Layout_Heading"
 					Text="Running Services"
@@ -44,7 +49,7 @@
 				</TextBlock>
 				<Border 
 					Name="Body_Layout_Container"
-					Background="LightBlue"
+					Background="Transparent"
 					Width="300"
 					Height="300">
 					<ScrollViewer

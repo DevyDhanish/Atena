@@ -9,7 +9,7 @@ import grpc
 import servicecmd_pb2_grpc as servercmd_grpc
 from services import service_handler
 from services.config import Config, CONFIG_INSTANCE
-from services.pigeon.pigeon import Pigeon, PIGEON_INSTANCE
+from services.pigeon.pigeon import Pigeon, PIGEON_INSTANCE, set_pigeon_instance
 
 
 class ServiceServer(servercmd_grpc.AtenServicesServicer):
@@ -28,7 +28,7 @@ def main():
     grpc_server = CONFIG_INSTANCE.get_grpc_server()
     grpc_port = CONFIG_INSTANCE.get_grpc_port()
 
-    PIGEON_INSTANCE = Pigeon(nest_addr, nest_port)
+    set_pigeon_instance(Pigeon(nest_addr, nest_port))
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     servercmd_grpc.add_AtenServicesServicer_to_server(ServiceServer(), server)

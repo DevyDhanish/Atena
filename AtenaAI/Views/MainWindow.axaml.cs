@@ -3,9 +3,11 @@ using AtenaAI.EventHandlers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using System.Diagnostics;
+using Avalonia.Platform;
+using System;
 using System.Linq;
-using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using AtenaAI.ViewModels;
 
 namespace AtenaAI.Views;
 
@@ -14,16 +16,25 @@ namespace AtenaAI.Views;
 // first make a method in this file then add that to the appropriate event in Atena.Event
 public partial class MainWindow : Window
 {
+    private Window? _chatWindow;
     public MainWindow()
     {
         InitializeComponent();
 
+        if(!Design.IsDesignMode)
+        {
+            Init();
+        }
+    }
+
+    private void Init()
+    {
 #if DEBUG
         Banner_Text.Text = "DEBUG BUILD!!!!";
 #else
         MainLayout.Children.Remove(Banner);
 #endif
-        if(UIEventRouter.instance == null)
+        if (UIEventRouter.instance == null)
         {
             Log.Err("UIEventRouter.instance does not exists");
             return;
@@ -32,6 +43,12 @@ public partial class MainWindow : Window
         UIEventRouter.instance.UI_OnServiceStarted += AddNewActiveServiceNameToUI;
         UIEventRouter.instance.UI_OnServiceStopped += RemoveActiveServiceNameFromUI;
 
+        Config.ConfigData configData = Config.Instance.Data;
+
+        this.Width = configData.mainWindowWidth;
+        this.Height = configData.mainWindowHeight;
+
+        this.Position = new Avalonia.PixelPoint(configData.mainWindowPosX, configData.mainWindowPosY);
     }
 
     private void RemoveActiveServiceNameFromUI(string serviceName)
@@ -66,8 +83,47 @@ public partial class MainWindow : Window
         Body_Layout_Container_Scr_Content.Children.Add(serviceNameTextBlock);
     }
 
-    public void OnPingClick(object? sender, RoutedEventArgs args)
+    public void OnStartAudioClick(object? sender, RoutedEventArgs args)
     {
-        Services.Instance?.DispatchService(new atena.ServiceType.Ping());
+        Services.Instance?.DispatchService(new atena.ServiceType.ListenDeskAudio());
+
+        _chatWindow = new ChatWindow();
+        _chatWindow.DataContext = new ChatViewModel();
+        _chatWindow.Show();
+        MakeWindowClickThrough(_chatWindow);
     }
+
+    public void OnStopAudioClick(object? sender, RoutedEventArgs args)
+    {
+        Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
+
+        _chatWindow?.Close();
+    }
+    public void MakeWindowClickThrough(Window window)
+    {
+        IntPtr hwnd = IntPtr.Zero;
+
+        if (window.TryGetPlatformHandle() is { } platformHandle)
+        {
+            hwnd = platformHandle.Handle;
+        }
+        else
+        {
+            Log.Err("Failed to get platform handle for window.");
+            return;
+        }
+
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_TRANSPARENT = 0x00000020;
+        const int WS_EX_LAYERED = 0x00080000;
+
+        int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+        SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_TRANSPARENT | WS_EX_LAYERED);
+    }
+
+    [DllImport("user32.dll")]
+    private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 }

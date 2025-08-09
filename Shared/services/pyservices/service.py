@@ -12,6 +12,7 @@ SEE_SCREEN = 2
 DEFAULT_OK_RETURN = 3
 DEFAULT_BAD_RETURN = 4
 START_SERVICE = 5
+STOP_LISTEN_TO_DESKTOP_AUDIO = 6
 
 def get_service_name_by_id(service_id: int) -> str:
     return {
@@ -20,7 +21,8 @@ def get_service_name_by_id(service_id: int) -> str:
         2: "SeeScreen",
         3: "DefaultOkReturn",
         1: "ListenToDesktopAudio",
-        4: "DefaultBadReturn"
+        4: "DefaultBadReturn",
+        6: "StopListenDesktop",
     }.get(service_id, "Not a service")
 
 class Service(ABC):

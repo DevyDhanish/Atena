@@ -1,12 +1,15 @@
+# don't use this file any more, speech recog is not being done using RealTimeSTTs
+
 import whisper
 import tempfile
 import scipy.io
 from services.common.desktop_audio import DesktopAudio
 from collections import deque
 from threading import Thread
+from loguru import logger
 
 class SpeechToText():
-    def __init__(self, language = "en", model_type = "small", model_backend = "cuda") -> None:
+    def __init__(self, language = "en", model_type = "tiny", model_backend = "cuda") -> None:
         self.use_language = language
         self.model = None
         self.all_text = deque()
@@ -26,6 +29,8 @@ class SpeechToText():
         # self.MODEL_BACKEND = "cpu"
         self.model_backend = model_backend
 
+        self.desktop_audio = None
+
         self.should_stop = False
 
     def add_text(self, text):
@@ -41,13 +46,14 @@ class SpeechToText():
         self.model = whisper.load_model(name=self.model_type, device=self.model_backend)
 
     def transcript(self, recording, sample_rate):
+        logger.info("Transcribing a audio")
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             scipy.io.wavfile.write(f.name, sample_rate, recording)
             audio_path = f.name
 
             result = self.model.transcribe(audio_path, language="en")
             txt_str = result["text"]
-
+            logger.info(txt_str)
             self.add_text(txt_str)
 
     def stop(self):
@@ -62,15 +68,14 @@ class SpeechToText():
         # transcribe
         # store
 
-        desktop_audio = DesktopAudio()
-        desktop_audio.record()
+        self.desktop_audio = DesktopAudio()
+        self.desktop_audio.record()
 
         while not self.should_stop:
-            recording = desktop_audio.get_audio()
+            recording = self.desktop_audio.get_audio()
 
             if recording is not None:
-
-                self.transcript(recording, desktop_audio.sample_rate)
+                self.transcript(recording, self.desktop_audio.sample_rate)
 
 
     def transcribe(self):

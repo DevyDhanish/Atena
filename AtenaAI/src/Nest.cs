@@ -11,7 +11,7 @@ namespace atena
     {
         private IPEndPoint? _nestAddress;
         private readonly Socket _listenSocket;
-    
+
         public Nest()
         {
             string serverAddr = Config.Instance.Data.serverAddr;
@@ -27,12 +27,12 @@ namespace atena
             {
                 srvPort = int.Parse(serverPort);
             }
-            catch(ArgumentNullException)
+            catch (ArgumentNullException)
             {
                 Log.Err("Provided string {0}, cannot be converted to int", serverPort);
                 return;
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 Log.Err("Provided string {0}, cannot be converted to int", serverPort);
                 return;
@@ -55,17 +55,82 @@ namespace atena
 
         public void Accept(bool blocking = false)
         {
-            if(blocking)
+            if (blocking)
             {
                 AtenaEvent.instance?.FireOnPigeonConnected(_listenSocket.Accept());
                 return;
             }
 
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 AtenaEvent.instance?.FireOnPigeonConnected(_listenSocket.Accept());
             });
 
             return;
+        }
+        public static void ListenForData(Socket clientSocket, bool blocking = false)
+        {
+            if (clientSocket == null)
+            {
+                Log.Err("Client socket is null. Cannot listen for data.");
+                return;
+            }
+
+            Action listenAction = () =>
+            {
+                try
+                {
+                    while (clientSocket.Connected)
+                    {
+                        // Step 1: Read length prefix (4 bytes)
+                        byte[]? lengthBuffer = ReadExact(clientSocket, 4);
+                        if (lengthBuffer == null) break;
+
+                        int messageLength = BitConverter.ToInt32(lengthBuffer.Reverse().ToArray(), 0); // Big-endian
+
+                        // Step 2: Read message
+                        byte[]? messageBuffer = ReadExact(clientSocket, messageLength);
+                        if (messageBuffer == null) break;
+
+                        // Step 3: Parse protobuf
+                        atenaNest.StreamData streamData = atenaNest.StreamData.Parser.ParseFrom(messageBuffer);
+
+                        // Step 4: Decode Base64
+                        byte[] rawBytes = Convert.FromBase64String(streamData.Data.ToStringUtf8());
+                        streamData.Data = Google.Protobuf.ByteString.CopyFrom(rawBytes);
+
+                        AtenaEvent.instance?.FireOnPegionDataRecieved(clientSocket, streamData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Err("Error while listening for data: {0}", ex.Message);
+                }
+                finally
+                {
+                    clientSocket.Close();
+                }
+            };
+
+            if (blocking)
+                listenAction();
+            else
+                Task.Run(listenAction);
+        }
+
+        private static byte[]? ReadExact(Socket socket, int length)
+        {
+            byte[] buffer = new byte[length];
+            int totalRead = 0;
+
+            while (totalRead < length)
+            {
+                int read = socket.Receive(buffer, totalRead, length - totalRead, SocketFlags.None);
+                if (read == 0) return null; // Connection closed
+                totalRead += read;
+            }
+
+            return buffer;
         }
     }
 }

@@ -2,7 +2,9 @@
 using AtenaAI.EventHandlers;
 using Avalonia.Threading;
 using System;
+using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 
 namespace atena
 {
@@ -32,6 +34,19 @@ namespace atena
         public Action<atenaGrpc.ServiceId>? OnServiceStarted;
         public Action<atenaGrpc.ServiceId>? OnServiceStopped;
         public Action<Socket>? OnPigeonConnected;
+        public Action<Socket, atenaNest.StreamData?>? OnPigeonDataRecieved;
+        
+        public void FireOnPegionDataRecieved(Socket clientSocket, atenaNest.StreamData? data)
+        {
+            OnPigeonDataRecieved?.Invoke(clientSocket, data);
+
+            string chat_data = Encoding.UTF8.GetString(data.Data.ToArray());
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                UIEventRouter.instance?.FireOnChatTextRecieved(chat_data, data.DataType);
+            });
+        }
 
         public void FireOnPigeonConnected(Socket pigeonSocket)
         {

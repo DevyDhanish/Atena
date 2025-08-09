@@ -1,0 +1,38 @@
+<Window
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:AtenaAI.ViewModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:views="clr-namespace:AtenaAI.Views"
+	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
+	x:Class="AtenaAI.Views.ChatWindow"
+	Title="chat"
+	Background="Transparent"
+	SystemDecorations="None"
+	Topmost="True">
+
+	<Border Background="Transparent" Padding="10">
+		<StackPanel Spacing="10">
+			<!-- AI response -->
+			<Border
+                Background="#FF222222"
+                CornerRadius="10"
+                Padding="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+				<ScrollViewer
+					Name="Chat_scrollView">
+					<StackPanel
+						Name="Chat_Content"
+						Spacing="10">
+						<TextBlock Text="[Atena] : Listening...."
+								   VerticalAlignment="Center"
+									Foreground="White"
+									TextWrapping="Wrap"/>
+					</StackPanel>
+				</ScrollViewer>
+			</Border>
+		</StackPanel>
+	</Border>
+</Window>

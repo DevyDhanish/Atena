@@ -16,6 +16,7 @@ enum ServiceId {
   DEFAULT_OK_RETURN = 3;
   DEFAULT_BAD_RETURN = 4;
   START_SERVICE = 5;
+  STOP_LISTEN_TO_DESKTOP_AUDIO = 6;
 }
 
 message Cmd {

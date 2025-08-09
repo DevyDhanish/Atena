@@ -67,6 +67,9 @@ namespace atena
                 case atenaGrpc.ServiceId.DefaultBadReturn:
                     return "DefaultBadReturn";
 
+                case atenaGrpc.ServiceId.StopListenToDesktopAudio:
+                    return "StopListenToDesktopAudio";
+
                 default:
                     return "Not a service";
             }

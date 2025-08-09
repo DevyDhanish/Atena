@@ -1,6 +1,18 @@
 {
-	"ListenDesktopAudio" : true,
-	"SeeScreen" : true,
+	"screenWidth" : 1920,
+	"screenHeight" : 1080,
+	"mainWindowWidth" : 300,
+	"mainWindowHeight" : 300,
+	"mainWindowPosX" : 0,
+	"mainWindowPosY" : 0,
+	"chatWindowWidth" : 800, 
+	"chatWindowHeight" : 800,
+	"chatWindowPosX" : 500,
+	"chatWindowPosY" : 0,
+	"userTextColor" : "#505050",
+	"atenaTextColor" : "#ffffff",
+	"listenDesktopAudio" : true,
+	"seeScreen" : true,
 	"pythonPath": "C:\\Users\\Daniel\\miniconda3\\envs\\atena\\python.exe",
 	"serviceFilePath" :  "services\\",
 	"mainService": "main_service.py",
@@ -9,7 +21,7 @@
 	"tls": false,
 	"tcpPort" : "50052",
 
-	"ServicesFilePathWithName" : [
+	"servicesFilePathWithName" : [
 		{
 			"serviceName" : "Ping",
 			"serviceFilePath" : "services\\pyservices\\ping.py"
