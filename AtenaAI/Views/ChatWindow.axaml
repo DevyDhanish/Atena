@@ -4,19 +4,26 @@
 	xmlns:vm="using:AtenaAI.ViewModels"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
 	xmlns:views="clr-namespace:AtenaAI.Views"
 	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
 	x:Class="AtenaAI.Views.ChatWindow"
 	Title="chat"
 	Background="Transparent"
 	SystemDecorations="None"
-	Topmost="True">
+	Topmost="True"
+	x:DataType="vm:ChatViewModel">
+
+	<Design.DataContext>
+		<vm:ChatViewModel/>
+	</Design.DataContext>
 
 	<Border Background="Transparent" Padding="10">
 		<StackPanel Spacing="10">
 			<!-- AI response -->
 			<Border
-                Background="#FF222222"
+				Name="Chat_Container"
+                Background="#40404040"
                 CornerRadius="10"
                 Padding="10"
                 HorizontalAlignment="Stretch"
@@ -26,10 +33,7 @@
 					<StackPanel
 						Name="Chat_Content"
 						Spacing="10">
-						<TextBlock Text="[Atena] : Listening...."
-								   VerticalAlignment="Center"
-									Foreground="White"
-									TextWrapping="Wrap"/>
+						<md:MarkdownScrollViewer Name="MarkDown_Content" Markdown="{Binding MarkDownText}"/>
 					</StackPanel>
 				</ScrollViewer>
 			</Border>

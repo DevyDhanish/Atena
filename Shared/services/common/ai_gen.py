@@ -31,26 +31,25 @@ class TextGen():
         self.provider = g4f.Provider.LambdaChat
 
     def process_text(self, text):
-        logger.info(text)
-
         get_pigeon_instance().send_data(
             DisplayType_CHAT_UI,
             DataType_AI_GEN_TEXT,
-            bytearray(text, encoding="utf-8")
+            bytearray(str(text), encoding="utf-8")
         )
 
     def gen_response(self, user_text, system_text):
         response = self.model.create(
-        model="",
+        model="deepseek-llama3.3-70b",
         provider=self.provider,
         messages=[
             {"role": "user", "content": f"{user_text}"},
             {"role" : "system", "content" : f"{system_text}"}
             ],
-        stream=False
-        )
+        stream=True
+        )        
 
-        self.process_text(response)
+        for messages in response:
+            self.process_text(messages)
 
     def generate_response(self, user_text):
         system_text = "Respond with detailed, structured, and professional explanations as if you are answering in a formal interview setting. Maintain a clear and concise style, using complete sentences and proper grammar. Avoid using emojis, special symbols, or any characters that may cause issues when transmitting over TCP"
@@ -58,10 +57,3 @@ class TextGen():
         Thread(target=self.gen_response, args=(user_text, system_text)).start()
 
         return
-    
-
-# ld = TextGen()
-# ld.generate_response("hey")
-
-# while True:
-#     pass

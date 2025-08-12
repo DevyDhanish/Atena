@@ -30,7 +30,7 @@ public partial class MainWindow : Window
     private void Init()
     {
 #if DEBUG
-        Banner_Text.Text = "DEBUG BUILD!!!!";
+        Banner_Text.Text = "Atena Alpha build";
 #else
         MainLayout.Children.Remove(Banner);
 #endif
@@ -88,14 +88,13 @@ public partial class MainWindow : Window
         Services.Instance?.DispatchService(new atena.ServiceType.ListenDeskAudio());
 
         _chatWindow = new ChatWindow();
-        _chatWindow.DataContext = new ChatViewModel();
         _chatWindow.Show();
-        MakeWindowClickThrough(_chatWindow);
+        //MakeWindowClickThrough(_chatWindow);
     }
 
     public void OnStopAudioClick(object? sender, RoutedEventArgs args)
     {
-        Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
+        //Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
 
         _chatWindow?.Close();
     }
