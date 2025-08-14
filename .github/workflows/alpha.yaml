@@ -8,13 +8,13 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      -name: checkout
-      uses: actions/checkout@v3
+      - name: checkout
+        uses: actions/checkout@v3
 
-      -name: setup
-      uses: action/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0'
+      - name: setup
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
 
-    -name: build
-    run: dotnet build --configuration Debug
+      - name: build
+        run: dotnet build --configuration Debug
