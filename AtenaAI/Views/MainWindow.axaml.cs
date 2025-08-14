@@ -17,6 +17,7 @@ namespace AtenaAI.Views;
 public partial class MainWindow : Window
 {
     private Window? _chatWindow;
+    private bool isChatWindowOpen = false;
     public MainWindow()
     {
         InitializeComponent();
@@ -87,16 +88,28 @@ public partial class MainWindow : Window
     {
         Services.Instance?.DispatchService(new atena.ServiceType.ListenDeskAudio());
 
-        _chatWindow = new ChatWindow();
-        _chatWindow.Show();
+        if(_chatWindow == null)
+        {
+        }
+
+        if(!isChatWindowOpen)
+        {
+            _chatWindow = new ChatWindow();
+            _chatWindow.Show();
+            isChatWindowOpen = true;
+        }
         //MakeWindowClickThrough(_chatWindow);
     }
 
     public void OnStopAudioClick(object? sender, RoutedEventArgs args)
     {
-        //Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
+        Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
 
-        _chatWindow?.Close();
+        if(isChatWindowOpen)
+        {
+            _chatWindow?.Close();
+            isChatWindowOpen = false;
+        }
     }
     public void MakeWindowClickThrough(Window window)
     {

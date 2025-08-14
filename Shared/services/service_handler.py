@@ -4,7 +4,7 @@ import servicecmd_pb2_grpc as servercmd_grpc
 from loguru import logger
 from services.pyservices.service import Service, get_service_name_by_id, FAIL, OK, DEFAULT_BAD_RETURN, PING, LISTEN_TO_DESKTOP_AUDIO, STOP_LISTEN_TO_DESKTOP_AUDIO
 from services.pyservices.ping import Ping
-from services.pyservices.listen_desktop import ListenDesktop, LISTEN_DESKTOP_INSTANCE
+from services.pyservices.listen_desktop import ListenDesktop
 from services.cmd_packet import CmdPacket, ResPacket
 from services.common.ai_gen import TextGen
 
@@ -35,14 +35,12 @@ def handle_service(request, context):
 
         case 1:
             # Create or reuse the ListenDesktop singleton instance
-            _ = TextGen()
-            if LISTEN_DESKTOP_INSTANCE is None:
-                LISTEN_DESKTOP_INSTANCE = ListenDesktop()
-            return exec_service(LISTEN_DESKTOP_INSTANCE, cmd_packet.serviceData)
+            return exec_service(ListenDesktop(), cmd_packet.serviceData)
 
         case 6:
-            if LISTEN_DESKTOP_INSTANCE is not None:
-                LISTEN_DESKTOP_INSTANCE.stop_recording()
+            listen_desk_inst = ListenDesktop()
+            if listen_desk_inst is not None:
+                listen_desk_inst.stop_recording()
                 logger.info("Stopped desktop listening service")
             else:
                 logger.warning("Stop requested, but ListenDesktop instance does not exist")

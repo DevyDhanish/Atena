@@ -1,7 +1,7 @@
 from typing import Any
 import g4f
 from threading import Thread
-from services.pigeon.pigeon import get_pigeon_instance, DisplayType_CHAT_UI, DataType_AI_GEN_TEXT
+from services.pigeon.pigeon import DisplayType_CHAT_UI, DataType_AI_GEN_TEXT, Pigeon
 from loguru import logger
 
 # while True:
@@ -31,7 +31,8 @@ class TextGen():
         self.provider = g4f.Provider.LambdaChat
 
     def process_text(self, text):
-        get_pigeon_instance().send_data(
+        pigeon = Pigeon()
+        pigeon.send_data(
             DisplayType_CHAT_UI,
             DataType_AI_GEN_TEXT,
             bytearray(str(text), encoding="utf-8")

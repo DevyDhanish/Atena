@@ -79,8 +79,8 @@ namespace AtenaAI.Views
             {
                 prevData = MarkDown_Content.Markdown;
 
-                chatViewModel.MarkDownText += data;
                 //MarkDown_Content.Markdown += data;
+                chatViewModel.MarkDownText += data;
                 Chat_scrollView.ScrollToEnd();
                 
                 textBuffer.Clear();

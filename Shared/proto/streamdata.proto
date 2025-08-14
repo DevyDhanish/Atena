@@ -14,6 +14,7 @@ enum DisplayType
 {
     CHAT_UI = 0;
     MAIN_UI = 1;
+    NEITHER = 2;
 }
 
 // add more as you like 
@@ -21,6 +22,7 @@ enum DataType
 {
     AI_GEN_TEXT = 0;
     NORMAL_TEXT = 1;
+    EVENT = 2;
 }
 
 message StreamData

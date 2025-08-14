@@ -9,7 +9,7 @@
 	"chatWindowHeight" : 1000,
 	"chatWindowPosX" : 0,
 	"chatWindowPosY" : 0,
-	"userTextColor" : "#ff2020ff",
+	"userTextColor" : "#ffffffff",
 	"atenaTextColor" : "#ffffffff",
 	"listenDesktopAudio" : true,
 	"seeScreen" : true,
