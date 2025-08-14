@@ -11,15 +11,18 @@ namespace atena
     {
         private IPEndPoint? _nestAddress;
         private readonly Socket _listenSocket;
+        private bool _connected;
 
         public Nest()
         {
+            _connected = false;
             string serverAddr = Config.Instance.Data.serverAddr;
             string serverPort = Config.Instance.Data.tcpPort;
 
             IPAddress ipAddress = Dns.GetHostAddresses(serverAddr)
                                      .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
+            AtenaEvent.instance.OnPigeonConnected += updatePigeonConnectStatus;
 
             int srvPort = 0;
 
@@ -52,7 +55,10 @@ namespace atena
             _listenSocket.Listen(1);
         }
 
-
+        private void updatePigeonConnectStatus(Socket pigeonSocket)
+        {
+            _connected = true;
+        }
         public void Accept(bool blocking = false)
         {
             if (blocking)

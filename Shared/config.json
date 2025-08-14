@@ -5,12 +5,12 @@
 	"mainWindowHeight" : 300,
 	"mainWindowPosX" : 0,
 	"mainWindowPosY" : 0,
-	"chatWindowWidth" : 800, 
-	"chatWindowHeight" : 800,
-	"chatWindowPosX" : 500,
+	"chatWindowWidth" : 1000, 
+	"chatWindowHeight" : 1000,
+	"chatWindowPosX" : 0,
 	"chatWindowPosY" : 0,
-	"userTextColor" : "#505050",
-	"atenaTextColor" : "#ffffff",
+	"userTextColor" : "#ff404040",
+	"atenaTextColor" : "#ffffffff",
 	"listenDesktopAudio" : true,
 	"seeScreen" : true,
 	"pythonPath": "C:\\Users\\Daniel\\miniconda3\\envs\\atena\\python.exe",
@@ -18,8 +18,27 @@
 	"mainService": "main_service.py",
 	"serverAddr": "localhost",
 	"port": "50051",
-	"tls": false,
 	"tcpPort" : "50052",
+	"tls": false,
+	"chatWindowBackgroundColor" : "Transparent",
+
+	"notificationBorderWidth" : 200,
+	"notificationBorderHeight" : 40,
+	"notificationBorderBackground" : "#ff252525",
+	"notificatonBorderCornerRadius" : 20,
+
+	"notificationStackPanelOrientation" : "Horizontal",
+	"notificationStackPanelVertialAlignment" : "Center",
+	
+	"notificationTextBlockPadding" : 10,
+	"notificationTextBlockVerticialAlignment" : "Center",
+	"notificationTextBlockForeground" : "#ffffffff",
+	"notificationTextBlockText" : "default value",
+
+	"notificationTextBlockBorderWidth" : 15,
+	"notificationTextBlockBorderHeight" : 15,
+	"notificationTextBlockBorderBackground" : "#ffff0000",
+	"notificationTextBlockBorderCornerRadius" : 50,
 
 	"servicesFilePathWithName" : [
 		{

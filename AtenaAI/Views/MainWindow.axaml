@@ -3,63 +3,61 @@
         xmlns:vm="using:AtenaAI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:AtenaAI.Views"
-        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
+        xmlns:gif="clr-namespace:AvaloniaGif;assembly=AvaloniaGif"
+        mc:Ignorable="d"
         x:Class="AtenaAI.Views.MainWindow"
         Title="Atena"
-		SystemDecorations="None"
-		Background="Transparent"
-	    Topmost="True">
+        SystemDecorations="None"
+        Background="Transparent"
+        Topmost="True"
+        Width="350" Height="400">
 
-	<StackPanel
-		Name="MainLayout"
-		x:DataType="vm:MainViewModel">
-		<Border
-			Name="Banner">
-			<TextBlock
-				Name="Banner_Text"
-				Margin="10"
-				FontSize="24"
-				Foreground="Red"
-				FontWeight="Bold"
-				HorizontalAlignment="Center">
-			</TextBlock>
-		</Border>
-		<Border
-			Name="Body">
-			<StackPanel
-				Name="Body_Layout">
-				<StackPanel
-					Orientation="Horizontal">
-					<Button
-						Click="OnStartAudioClick">
-						Capture Audio
-					</Button>
-					<Button
-						Click="OnStopAudioClick">
-						Stop Audio
-					</Button>
-				</StackPanel>
-				<TextBlock 
-					Name="Body_Layout_Heading"
-					Text="Running Services"
-					Foreground="Green"
-					FontSize="18"
-					FontWeight="ExtraBold">
-				</TextBlock>
-				<Border 
-					Name="Body_Layout_Container"
-					Background="Transparent"
-					Width="300"
-					Height="300">
-					<ScrollViewer
-						Name="Body_Layout_Container_Scr">
-						<StackPanel
-							Name="Body_Layout_Container_Scr_Content">
-						</StackPanel>
-					</ScrollViewer>
-				</Border>
-			</StackPanel>
-		</Border>
-	</StackPanel>
+    <Border Padding="10">
+        <StackPanel x:DataType="vm:MainViewModel" Name="MainLayout" Spacing="10" HorizontalAlignment="Left">
+
+            <!-- Banner -->
+            <Border Name="Banner">
+                <TextBlock Name="Banner_Text"
+                           Margin="0,0,0,10"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="Green"/>
+            </Border>
+
+            <!-- Body -->
+            <Border Name="Body" Background="Transparent">
+                <StackPanel Name="Body_Layout" Spacing="10" HorizontalAlignment="Left">
+
+                    <!-- Button Row -->
+                    <StackPanel Orientation="Horizontal">
+                        <Button Width="100" Height="50"
+                                CornerRadius="20"
+                                Background="Black"
+                                Foreground="White"
+                                Click="OnShowChatWindowClick">
+                            <TextBlock Text="{Binding ChatShowHideButtonContent}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"/>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Scrollable Content -->
+                    <Border Name="Body_Layout_Container"
+                            Width="300"
+                            Height="300"
+                            Background="Transparent">
+                        <ScrollViewer Name="Body_Layout_Container_Scr">
+                            <StackPanel Name="Body_Layout_Container_Scr_Content"
+                                        HorizontalAlignment="Left"
+                                        Spacing="10">
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </Border>
+
 </Window>

@@ -9,7 +9,7 @@ import grpc
 import servicecmd_pb2_grpc as servercmd_grpc
 from services import service_handler
 from services.config import Config, CONFIG_INSTANCE
-from services.pigeon.pigeon import Pigeon, PIGEON_INSTANCE, set_pigeon_instance
+from services.pigeon.pigeon import Pigeon, DataType_EVENT, DisplayType_NEITHER
 
 
 class ServiceServer(servercmd_grpc.AtenServicesServicer):
@@ -28,7 +28,7 @@ def main():
     grpc_server = CONFIG_INSTANCE.get_grpc_server()
     grpc_port = CONFIG_INSTANCE.get_grpc_port()
 
-    set_pigeon_instance(Pigeon(nest_addr, nest_port))
+    pigeon = Pigeon(nest_addr, nest_port)
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     servercmd_grpc.add_AtenServicesServicer_to_server(ServiceServer(), server)
@@ -42,6 +42,9 @@ def main():
     except RuntimeError:
         logger.error("Another instance of gRPC is already running.")
 
+    # send a main_service_started data
+
+    pigeon.send_data(DisplayType_NEITHER, DataType_EVENT, bytearray(bytes("main_service_started", "utf-8")))
     server.wait_for_termination()
 
 if __name__ == "__main__":

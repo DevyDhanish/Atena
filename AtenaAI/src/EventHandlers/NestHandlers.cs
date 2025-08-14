@@ -25,8 +25,6 @@ namespace AtenaAI.EventHandlers
         private void OnDataRecieved(Socket clientSocket, atenaNest.StreamData? data)
         {
             if (data == null) return;
-            byte[]? st_data = data.Data.ToArray();
-            Log.Info(Encoding.UTF8.GetString(st_data));
         }
     }
 }

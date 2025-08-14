@@ -1,13 +1,16 @@
 ﻿using atena;
 using AtenaAI.EventHandlers;
+using AtenaAI.ViewModels;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using AtenaAI.ViewModels;
 
 namespace AtenaAI.Views;
 
@@ -17,6 +20,8 @@ namespace AtenaAI.Views;
 public partial class MainWindow : Window
 {
     private Window? _chatWindow;
+    private bool isChatWindowOpen = false;
+    private MainViewModel mainWindowViewModel;
     public MainWindow()
     {
         InitializeComponent();
@@ -30,7 +35,7 @@ public partial class MainWindow : Window
     private void Init()
     {
 #if DEBUG
-        Banner_Text.Text = "DEBUG BUILD!!!!";
+        Banner_Text.Text = "Atena Alpha build";
 #else
         MainLayout.Children.Remove(Banner);
 #endif
@@ -41,7 +46,7 @@ public partial class MainWindow : Window
         }
 
         UIEventRouter.instance.UI_OnServiceStarted += AddNewActiveServiceNameToUI;
-        UIEventRouter.instance.UI_OnServiceStopped += RemoveActiveServiceNameFromUI;
+        //UIEventRouter.instance.UI_OnServiceStopped += RemoveActiveServiceNameFromUI;
 
         Config.ConfigData configData = Config.Instance.Data;
 
@@ -49,6 +54,15 @@ public partial class MainWindow : Window
         this.Height = configData.mainWindowHeight;
 
         this.Position = new Avalonia.PixelPoint(configData.mainWindowPosX, configData.mainWindowPosY);
+
+        mainWindowViewModel = new MainViewModel();
+        this.DataContext = mainWindowViewModel;
+
+        if (_chatWindow == null)
+        {
+            _chatWindow = new ChatWindow();
+            showChatWindow();
+        }
     }
 
     private void RemoveActiveServiceNameFromUI(string serviceName)
@@ -65,6 +79,61 @@ public partial class MainWindow : Window
 
         Body_Layout_Container_Scr_Content.Children.Remove(toRemove);
     }
+
+    private Border AddNotifications(string content)
+    {
+
+        //    <Border Width = "200"
+        //        Height="50"
+        //        Background="Black"
+        //        CornerRadius="20">
+        //    <StackPanel Orientation = "Horizontal" VerticalAlignment="Center">
+        //        <TextBlock Padding = "10"
+        //                   VerticalAlignment="Center"
+        //                   Foreground="White"
+        //                   Text="Recording Audio"/>
+        //        <Border Width = "15"
+        //                Height="15"
+        //                Background="Red"
+        //                CornerRadius="50"/>
+        //    </StackPanel>
+        //</Border>
+
+        Config.ConfigData confData = Config.Instance.Data;
+
+        // notification border
+        Border mainBorder = new Border();
+        mainBorder.Height = confData.notificationBorderHeight;
+        mainBorder.Width = confData.notificationBorderWidth;
+        mainBorder.Background = Brush.Parse(confData.notificationBorderBackground);
+        mainBorder.CornerRadius = Avalonia.CornerRadius.Parse(confData.notificatonBorderCornerRadius.ToString());
+
+        // stack panel inside the border
+        StackPanel stackPanel = new StackPanel();
+        stackPanel.Orientation = Enum.Parse<Orientation>(confData.notificationStackPanelOrientation);
+        stackPanel.VerticalAlignment = Enum.Parse<VerticalAlignment>(confData.notificationStackPanelVertialAlignment);
+
+        // text block
+        TextBlock textBlock = new TextBlock();
+        textBlock.Padding = new Thickness(confData.notificationTextBlockPadding);
+        textBlock.VerticalAlignment = Enum.Parse<VerticalAlignment>(confData.notificationTextBlockVerticialAlignment);
+        textBlock.Foreground = Brush.Parse(confData.notificationTextBlockForeground);
+        textBlock.Text = content;
+
+        // small border (dot)
+        Border smallBorder = new Border();
+        smallBorder.Width = confData.notificationTextBlockBorderWidth;
+        smallBorder.Height = confData.notificationTextBlockBorderHeight;
+        smallBorder.Background = Brush.Parse(confData.notificationTextBlockBorderBackground);
+        smallBorder.CornerRadius = Avalonia.CornerRadius.Parse(confData.notificationTextBlockBorderCornerRadius.ToString());
+
+        // add elements
+        stackPanel.Children.Add(textBlock);
+        stackPanel.Children.Add(smallBorder);
+        mainBorder.Child = stackPanel;
+
+        return mainBorder;
+    }
     private void AddNewActiveServiceNameToUI(string serviceName)
     {
 
@@ -74,31 +143,47 @@ public partial class MainWindow : Window
             return;
         }
 
-        TextBlock serviceNameTextBlock = new TextBlock();
-        serviceNameTextBlock.Text = Config.Instance.GetServiceFilePathFromName(serviceName);
-        serviceNameTextBlock.FontSize = 15;
-        serviceNameTextBlock.Name = serviceName;
-        serviceNameTextBlock.Foreground = Brushes.White;
+        Log.Info("Started service {0}", serviceName);
 
-        Body_Layout_Container_Scr_Content.Children.Add(serviceNameTextBlock);
+        Border notification = AddNotifications(serviceName);
+
+        Body_Layout_Container_Scr_Content.Children.Add(notification);
     }
 
-    public void OnStartAudioClick(object? sender, RoutedEventArgs args)
+    private void showChatWindow()
     {
-        Services.Instance?.DispatchService(new atena.ServiceType.ListenDeskAudio());
-
-        _chatWindow = new ChatWindow();
-        _chatWindow.DataContext = new ChatViewModel();
-        _chatWindow.Show();
-        MakeWindowClickThrough(_chatWindow);
+        if (!isChatWindowOpen)
+        {
+            _chatWindow?.Show();
+            mainWindowViewModel.ChatShowHideButtonContent = "Hide chat";
+        }
+        else
+        {
+            _chatWindow?.Hide();
+            mainWindowViewModel.ChatShowHideButtonContent = "Show chat";
+        }
+        
+        isChatWindowOpen = !isChatWindowOpen;
     }
 
-    public void OnStopAudioClick(object? sender, RoutedEventArgs args)
+    public void OnShowChatWindowClick(object? sender, RoutedEventArgs args)
     {
-        Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
+        //Services.Instance?.DispatchService(new atena.ServiceType.ListenDeskAudio());
 
-        _chatWindow?.Close();
+        showChatWindow();
+        //MakeWindowClickThrough(_chatWindow);
     }
+
+    //public void OnStopAudioClick(object? sender, RoutedEventArgs args)
+    //{
+    //    Services.Instance?.DispatchService(new atena.ServiceType.StopListenDesktop());
+
+    //    if(isChatWindowOpen)
+    //    {
+    //        _chatWindow?.Hide();
+    //        isChatWindowOpen = false;
+    //    }
+    //}
     public void MakeWindowClickThrough(Window window)
     {
         IntPtr hwnd = IntPtr.Zero;

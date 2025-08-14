@@ -1,13 +1,16 @@
-﻿using atena.ServiceType;
+﻿using atena.RpcHandlers;
+using atena.ServiceType;
 using atenaGrpc;
 using Grpc.Net.Client;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using atena.RpcHandlers;
-using System;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace atena
 {
@@ -15,7 +18,8 @@ namespace atena
     {
         private static AtenServices.AtenServicesClient? _client;
         private static GrpcChannel? _channel;
-
+        private List<Service> autoRunServices;
+        private bool isMainServiceRunning;
         public static Services? Instance { get; private set; }
 
         public class ServiceFilePath
@@ -33,10 +37,23 @@ namespace atena
             }
 
             _client = null;
+            isMainServiceRunning = false;
+            AtenaEvent.instance.OnPigeonDataRecieved += onMainServiceStarted;
+            autoRunServices = new List<Service>();
+        }
+
+        /// <summary>
+        /// Starts the main python service and connets to the grpc backend
+        /// make sure <see cref="Nest"/> has already been created
+        /// because as soon as main service process start it will try a tcp connect to the nest using addr and port defined in config.json
+        /// </summary>
+        public void Main()
+        {
             if (!StartMainService())
             {
                 Log.Err("Something went wrong while starting the main service");
             }
+
 
             ConnectToMainService();
         }
@@ -258,6 +275,44 @@ namespace atena
             // notify that the service has returned
             AtenaEvent.instance?.FireOnServiceStopped(service.GetServiceId());
             AtenaEvent.instance?.FireOnRecvGrpcResponseEvent(data);
+        }
+
+        public void RegisterAutoRunService(Service s)
+        {
+            if (s == null) return;
+
+            autoRunServices.Add(s);
+        }
+
+        public void ExeAutoRunServices()
+        {
+            if (!isMainServiceRunning)
+            {
+                Log.Err("Main service is not running, cannot start other services");
+                return;
+            }
+
+            foreach(Service s in autoRunServices)
+            {
+                DispatchService(s);
+            }
+        }
+
+
+        private void onMainServiceStarted(Socket clientSocket, atenaNest.StreamData? data)
+        {
+            if (data == null) return;
+
+            byte[]? st_data = data.Data.ToArray();
+            string dataStr = Encoding.UTF8.GetString(st_data);
+
+            if (dataStr == null) return;
+
+            if (dataStr == "main_service_started")
+            {
+                isMainServiceRunning = true;
+                ExeAutoRunServices();
+            }
         }
     }
 }

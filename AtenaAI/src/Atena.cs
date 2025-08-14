@@ -27,6 +27,16 @@ namespace atena
             // service should be the last thing getting init cuz this runs the main_service.py 
             // so putting it last to init make sure that everything else is up and running before we start main_service
             Services services = new();
+
+
+            // auto start the listening service
+            if (Config.Instance.Data.listenDesktopAudio)
+            {
+                services.RegisterAutoRunService(new ListenDeskAudio());
+            }
+
+            // after everything been setup start the main service
+            services.Main();
         }
     }
 }
