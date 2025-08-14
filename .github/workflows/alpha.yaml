@@ -1,4 +1,4 @@
-name: build-atena
+name: build-atena-alpha
 
 on:
   push:
@@ -17,5 +17,6 @@ jobs:
           dotnet-version: '8.0'
 
       - name: build
-        run: dotnet build --configuration Debug
-        working-directory: ./AtenaAI
+        run: |
+          cd AtenaAI
+          dotnet build 
