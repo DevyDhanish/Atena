@@ -18,3 +18,4 @@ jobs:
 
       - name: build
         run: dotnet build --configuration Debug
+        working-directory: ./AtenaAI.Desktop
