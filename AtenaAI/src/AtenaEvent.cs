@@ -2,6 +2,7 @@
 using AtenaAI.EventHandlers;
 using Avalonia.Threading;
 using System;
+using System.Data;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -40,11 +41,23 @@ namespace atena
         {
             OnPigeonDataRecieved?.Invoke(clientSocket, data);
 
-            string chat_data = Encoding.UTF8.GetString(data.Data.ToArray());
+            string? defaultData = null;
+            atenaNest.DataType defaultDataType;
+
+            if (data == null)
+            {
+                defaultData = "";
+                defaultDataType = atenaNest.DataType.NormalText;
+            }
+            else
+            {
+                defaultData = Encoding.UTF8.GetString(data.Data.ToArray());
+                defaultDataType = data.DataType;
+            }
 
             Dispatcher.UIThread.Post(() =>
             {
-                UIEventRouter.instance?.FireOnChatTextRecieved(chat_data, data.DataType);
+                UIEventRouter.instance?.FireOnChatTextRecieved(defaultData, defaultDataType);
             });
         }
 

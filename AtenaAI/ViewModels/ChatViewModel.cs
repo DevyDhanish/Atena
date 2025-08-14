@@ -8,7 +8,7 @@ namespace AtenaAI.ViewModels
 {
 	public class ChatViewModel : INotifyPropertyChanged
 	{
-		private string _defaultText = "### **listening**";
+		private string _defaultText = "### **listening**\n";
 		public string MarkDownText
 		{
 			get

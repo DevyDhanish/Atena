@@ -102,6 +102,21 @@ namespace atena
             public string serverAddr { get; set; } = "null";
             public string port { get; set; } = "null";
             public string tcpPort { get; set; } = "null";
+            public string chatWindowBackgroundColor { get; set; } = "Transparent";
+            public int notificationBorderWidth { get; set; }
+	        public int notificationBorderHeight {get; set;} 
+	        public string notificationBorderBackground {get; set;} = "null";
+	        public int notificatonBorderCornerRadius {get; set;} 
+	        public string notificationStackPanelOrientation {get; set;} = "null";
+	        public string notificationStackPanelVertialAlignment {get; set;} = "null";
+	        public int notificationTextBlockPadding { get; set; }
+	        public string notificationTextBlockVerticialAlignment {get; set;} = "null";
+	        public string notificationTextBlockForeground {get; set;} = "null";
+	        public string notificationTextBlockText {get; set;} = "null";
+	        public int notificationTextBlockBorderWidth {get; set;} 
+	        public int notificationTextBlockBorderHeight {get; set;}
+	        public string notificationTextBlockBorderBackground {get; set;} = "null";
+	        public int notificationTextBlockBorderCornerRadius {get; set;} 
             public List<Services.ServiceFilePath>? servicesFilePathWithName { get; set; }
         }
     }

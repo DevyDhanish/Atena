@@ -42,13 +42,14 @@ class ListenDesktop(Service):
         logger.info("Recording stopped")
 
     def process_text(self, text):
-
         # if we are alredy made a text gen model. just reuse that no need to spin up again
         if self.text_gen is None:
             self.text_gen = TextGen()
 
+        # start the text generation thread
         self.text_gen.generate_response(text)
 
+        # while text gen is happening send the transcript back to ui
         pigeon = Pigeon()
         pigeon.send_data(
             DisplayType_CHAT_UI,
@@ -57,13 +58,13 @@ class ListenDesktop(Service):
         )
 
     def stop_recording(self):
-        if not self.recorder.is_shut_down:
-            self.stop_flag = True
+        self.stop_flag = True
+        if self.recorder is not None and not self.recorder.is_shut_down:
             self.recorder.stop()
             self.recorder.shutdown()
-            return
-        
-        logger.info("Recorder is not running")
+        if self.recording_thread is not None:
+            self.recording_thread.join()
+            self.recording_thread = None
 
     def start_transcribing_desktop_audio(self):
         if self.recorder is None:
@@ -72,7 +73,6 @@ class ListenDesktop(Service):
                                              on_recording_start=self.on_recording_start_callback,
                                              on_recording_stop=self.on_recording_stop_callback)
 
-
         self.stop_flag = False
 
         while not self.stop_flag:
@@ -80,11 +80,11 @@ class ListenDesktop(Service):
                 self.recorder.text(on_transcription_finished=self.process_text)
 
     def on_execute(self, data: bytearray) -> ResPacket:
-
         # if we are not already recording
-        if self.recording_thread is None: 
+        if self.recording_thread is None or not self.recording_thread.is_alive(): 
             self.recording_thread = Thread(target=self.start_transcribing_desktop_audio)
             self.recording_thread.start()
+            logger.error("created a recording thread")
 
         return ResPacket(
             LISTEN_TO_DESKTOP_AUDIO,

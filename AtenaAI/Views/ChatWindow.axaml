@@ -23,7 +23,6 @@
 			<!-- AI response -->
 			<Border
 				Name="Chat_Container"
-                Background="#40404040"
                 CornerRadius="10"
                 Padding="10"
                 HorizontalAlignment="Stretch"

@@ -49,6 +49,7 @@ namespace AtenaAI.Views
 
             Chat_Container.Width = this.Width;
             Chat_Container.Height = this.Height;
+            Chat_Container.Background = Brush.Parse(configData.chatWindowBackgroundColor);
 
             chatViewModel = new ChatViewModel();
             this.DataContext = chatViewModel;
@@ -101,6 +102,8 @@ namespace AtenaAI.Views
 
         public void OnRecvChat(string data, atenaNest.DataType type)
         {
+            if (type == atenaNest.DataType.Event) return;
+
             if(type == atenaNest.DataType.AiGenText)
             {
                 bufferAiText(removeEmojis(data));
