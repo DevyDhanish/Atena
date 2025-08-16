@@ -103,6 +103,8 @@ namespace atena
             public string port { get; set; } = "null";
             public string tcpPort { get; set; } = "null";
             public string chatWindowBackgroundColor { get; set; } = "Transparent";
+            public string rttDevice { get; set; } = "null";
+            public string rttModel { get; set; } = "null";
             public int notificationBorderWidth { get; set; }
 	        public int notificationBorderHeight {get; set;} 
 	        public string notificationBorderBackground {get; set;} = "null";

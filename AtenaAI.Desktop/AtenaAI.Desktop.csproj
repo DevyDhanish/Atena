@@ -8,6 +8,8 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <StartupObject>AtenaAI.Desktop.Program</StartupObject>
+    <AssemblyName>Atena</AssemblyName>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>

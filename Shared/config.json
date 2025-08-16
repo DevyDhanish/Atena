@@ -21,6 +21,8 @@
 	"tcpPort" : "50052",
 	"tls": false,
 	"chatWindowBackgroundColor" : "Transparent",
+	"rttDevice" : "cuda",
+	"rttModel" : "tiny",
 
 	"notificationBorderWidth" : 200,
 	"notificationBorderHeight" : 40,

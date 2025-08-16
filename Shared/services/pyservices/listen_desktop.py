@@ -5,6 +5,7 @@ from services.pigeon.pigeon import DataType_AI_GEN_TEXT, DataType_NORMAL_TEXT, D
 from services.common.speech_to_txt import SpeechToText
 from loguru import logger
 from services.common.ai_gen import TextGen
+from services.config import Config
 
 
 from RealtimeSTT import AudioToTextRecorder
@@ -68,10 +69,16 @@ class ListenDesktop(Service):
 
     def start_transcribing_desktop_audio(self):
         if self.recorder is None:
-            self.recorder = AudioToTextRecorder(device="cuda",
-                                             model="tiny",
-                                             on_recording_start=self.on_recording_start_callback,
-                                             on_recording_stop=self.on_recording_stop_callback)
+            config = Config()  # this will return the Config instance
+
+            device_name = config.get_device_name()
+            model_name = config.get_model_name()
+
+            self.recorder = AudioToTextRecorder(
+                                            device=device_name,
+                                            model=model_name,
+                                            on_recording_start=self.on_recording_start_callback,
+                                            on_recording_stop=self.on_recording_stop_callback)
 
         self.stop_flag = False
 
@@ -84,7 +91,6 @@ class ListenDesktop(Service):
         if self.recording_thread is None or not self.recording_thread.is_alive(): 
             self.recording_thread = Thread(target=self.start_transcribing_desktop_audio)
             self.recording_thread.start()
-            logger.error("created a recording thread")
 
         return ResPacket(
             LISTEN_TO_DESKTOP_AUDIO,

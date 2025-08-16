@@ -8,7 +8,7 @@ from concurrent import futures
 import grpc
 import servicecmd_pb2_grpc as servercmd_grpc
 from services import service_handler
-from services.config import Config, CONFIG_INSTANCE
+from services.config import Config
 from services.pigeon.pigeon import Pigeon, DataType_EVENT, DisplayType_NEITHER
 
 
@@ -17,16 +17,15 @@ class ServiceServer(servercmd_grpc.AtenServicesServicer):
         return service_handler.handle_service(request, context)
 
 def main():
-    global PIGEON_INSTANCE, CONFIG_INSTANCE
-
     logger.info("Starting the main service...")  
     
-    CONFIG_INSTANCE = Config("config.json")
+    config = Config()
+    config.read_config_file("config.json")
 
-    nest_addr = CONFIG_INSTANCE.get_nest_addr()
-    nest_port = CONFIG_INSTANCE.get_nest_port()
-    grpc_server = CONFIG_INSTANCE.get_grpc_server()
-    grpc_port = CONFIG_INSTANCE.get_grpc_port()
+    nest_addr   =   config.get_nest_addr()
+    nest_port   =   config.get_nest_port()
+    grpc_server =   config.get_grpc_server()
+    grpc_port   =   config.get_grpc_port()
 
     pigeon = Pigeon(nest_addr, nest_port)
 
@@ -35,6 +34,7 @@ def main():
 
     server_addr = f"{grpc_server}:{grpc_port}"
     logger.info(server_addr)
+
     try:
         server.add_insecure_port(server_addr)
         server.start()

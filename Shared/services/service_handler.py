@@ -27,8 +27,6 @@ def handle_service(request, context):
     cmd_packet = CmdPacket(request)
     logger.info(f"Got service with ID: {cmd_packet.serviceId}")
 
-    global LISTEN_DESKTOP_INSTANCE
-
     match cmd_packet.serviceId:
         case 0:
             return exec_service(Ping(), cmd_packet.serviceData)

@@ -1,22 +1,28 @@
 import json
+from typing_extensions import Self
 from loguru import logger
 
-
 class Config:
-    def __init__(self, path_to_config_file):
-        self.config_data = None
+    _instance = None
+    config_data = None
+    def __new__(cls, *args, **kwargs) -> Self:
+        if cls._instance is not None:
+            logger.info("Using the old instance")
+            return cls._instance
+        cls._instance = super().__new__(cls)
+        return cls._instance
 
-        with open(path_to_config_file, "r") as f_config:
+    def read_config_file(self, file_path):
+        with open(file_path, "r") as f_config:
             
             try:
                 data = json.load(f_config)
                 self.config_data = data
-
             except FileNotFoundError:
-                logger.error(f"File {path_to_config_file} was not found")
+                logger.error(f"File {file_path} was not found")
                 return
             except json.JSONDecodeError:
-                logger.error(f"Unable to decode json file {path_to_config_file}")
+                logger.error(f"Unable to decode json file {file_path}")
                 return
             
     def get_grpc_port(self) -> str:
@@ -38,7 +44,13 @@ class Config:
         if self.config_data is not None:
             return self.config_data["tcpPort"]
         else: return ""
+
+    def get_device_name(self) -> str:
+        if self.config_data is not None:
+            return self.config_data["rttDevice"]
+        else: return "" 
         
-
-
-CONFIG_INSTANCE = None
+    def get_model_name(self) -> str:
+        if self.config_data is not None:
+            return self.config_data["rttModel"]
+        else: return "" 
